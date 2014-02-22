@@ -18,6 +18,7 @@ int main(){
 	//creating the watcher -- adding directory
 	Inotify notify;
 	InotifyWatch watch(dir, IN_ALL_EVENTS);
+	watch.setNonBlock(false);
 	notify.Add(watch);
 	
 	//wating for a response
@@ -32,9 +33,11 @@ int main(){
 				string event_name = event.GetName();
 				uint32_t mask = event.GetMask();
 				//do something here
+				cout << event_name << " : " << mask << endl;
 			}
 			else{
 				//event retrieval failed
+				cerr << "event retrieval failed" << endl;
 			}
 		}
 	}
