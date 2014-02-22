@@ -5,6 +5,7 @@
 */
 #include "inotify-cxx.h"
 #include<string>
+#include<iostream>
 int main(){
 	using namespace std;
 	/*
@@ -18,12 +19,12 @@ int main(){
 	//creating the watcher -- adding directory
 	Inotify notify;
 	InotifyWatch watch(dir, IN_ALL_EVENTS);
-	watch.setNonBlock(false);
+	notify.setNonBlock(false);
 	notify.Add(watch);
 	
 	//wating for a response
 	while(true){
-		notify.waitForEvents();
+		notify.WaitForEvents();
 		//dealing with fired events
 		num_events = notify.GetEventCount();
 		for (int i=num_events; i>0; --i){
