@@ -9,9 +9,22 @@
 #include <stdio.h>
 #include<thread>
 #include <sstream>
+#include<unistd.h>
 std::string exec(char* cmd);
-int main(){
+int main(int argc, char** argv){
 	using namespace std;
+
+	/*
+	
+	Getting save directory from cmdline
+
+	*/
+	string copy_folder = "/tmp/lynda";
+	int choice = getopt(argc,argv,"f:");
+	if (choice=='f'){
+		copy_folder = optarg;
+		cout << copy_folder << endl;
+	}
 	/*
 	
 	watching a directory
