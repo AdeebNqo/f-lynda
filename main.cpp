@@ -19,14 +19,14 @@ int main(){
 	//creating the watcher -- adding directory
 	Inotify notify;
 	InotifyWatch watch(dir, IN_ALL_EVENTS);
-	notify.setNonBlock(false);
+	notify.SetNonBlock(false);
 	notify.Add(watch);
 	
 	//wating for a response
 	while(true){
 		notify.WaitForEvents();
 		//dealing with fired events
-		num_events = notify.GetEventCount();
+		int num_events = notify.GetEventCount();
 		for (int i=num_events; i>0; --i){
 			InotifyEvent event;
 			//getting current fired event
