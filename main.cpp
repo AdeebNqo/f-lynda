@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include<thread>
 #include <sstream>
-void watch(std::string& folder);
+void watch();
 std::string exec(char* cmd);
 int main(){
 	using namespace std;
@@ -20,8 +20,9 @@ int main(){
 	*/
 	string dir = "/tmp";
 	string dir2 = "/proc/33/fd";
+	thread fwatcher(watch);
 
-	//start by fidnding pid of the l**da applet thingie
+	//finding pid of the l**da applet thingie
 	char cmd[] = "lsof -n | grep Flash";
 	string result = exec(cmd);
 	stringstream ss(result);
@@ -32,7 +33,8 @@ int main(){
 	ss >> pid;
 	cout << result << endl;
 	cout << pid << endl;
- 	//thread(watch,dir);
+	
+	fwatcher.join();
 	return 0;
 }
 /*
@@ -40,8 +42,9 @@ int main(){
 	for any event fired events
 
 */
-void watch(std::string& folder){
+void watch(){
 	using namespace std;
+	string folder = "/tmp";
 	//creating the watcher -- adding directory
 	Inotify notify;
 	InotifyWatch watch(folder, IN_ALL_EVENTS);
