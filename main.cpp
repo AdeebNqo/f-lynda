@@ -10,9 +10,12 @@
 #include<thread>
 #include <sstream>
 #include<unistd.h>
+#include<vector>
 std::string exec(char* cmd);
 int main(int argc, char** argv){
 	using namespace std;
+
+	vector<std::string> cache;//will store last deleted file
 
 	/*
 	
@@ -63,7 +66,62 @@ int main(int argc, char** argv){
 				string event_name = event.GetName();
 				uint32_t mask = event.GetMask();
 				//do something here
-				cout << event_name << " : " << mask << endl;
+				//cout << event_name << " : " << mask << endl;
+				switch(mask){
+					case IN_ACCESS:
+						//File was accessed
+						cout << "acced " << event_name<< endl;
+						exec(const_cast<char*>(("mv /tmp/"+event_name+" "+copy_folder).c_str()));
+						cache[0] = event_name;
+						break;
+					case IN_ATTRIB:
+						//Metadata changed—for example, permissions,
+                             			//timestamps, extended attributes, link count
+						//cout << "changed attributes of " << event_name<< endl;
+						break;
+					case IN_CLOSE_WRITE:
+						//File opened for writing was closed
+						//cout << "closed " << event_name<< endl;
+						break;
+					case IN_CLOSE_NOWRITE:
+						//File not opened for writing was closed
+						//cout << "closed w/o writing " << event_name<< endl;
+						break;
+					case IN_CREATE:
+						//File/directory created in watched directory
+						//cout << "created " << event_name<< endl;
+						break;
+					case IN_DELETE:
+						//File/directory deleted from watched directory
+						//cout << "deleted " << event_name<< endl;
+						break;
+					case IN_DELETE_SELF:
+						//cout << "deleted folder " << event_name<< endl;
+						//Watched file/directory was itself deleted.
+						break;
+					case IN_MODIFY:
+						//cout << "modified " << event_name<< endl;
+						//File was modified
+						break;
+					case IN_MOVE_SELF:
+						//cout << "moved folder " << event_name<< endl;
+						//Watched file/directory was itself moved.
+						break;
+					case IN_MOVED_FROM:
+						//cout << "renamed " << event_name<< endl;
+						//Generated for the directory containing the old
+                             			//filename when a file is renamed
+						break;
+					case IN_MOVED_TO:
+						//cout << "renamed " << event_name<< endl;
+						//Generated for the directory containing the new
+                             			//filename when a file is renamed
+						break;
+					case IN_OPEN:
+						//cout << "opened " << event_name<< endl;
+						//File was opened
+						break;
+				}
 			}
 			else{
 				//event retrieval failed
@@ -78,6 +136,8 @@ int main(int argc, char** argv){
 
 	Method stolen from @waqas to save time
 	http://stackoverflow.com/a/478960
+
+	Method for executing a linux cmd
 
 */
 std::string exec(char* cmd) {
