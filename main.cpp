@@ -21,8 +21,8 @@ int main(){
 	string dir2 = "/proc/33/fd";
 
 	//start by fidnding pid of the l**da applet thingie
-	char* cmd = "lsof -n | grep Flash";
-	string result = exec(cmd)
+	char cmd[] = "lsof -n | grep Flash";
+	string result = exec(cmd);
 	cout << result << endl;
  	//thread(watch,dir);
 	return 0;
@@ -33,9 +33,10 @@ int main(){
 
 */
 void watch(std::string& folder){
+	using namespace std;
 	//creating the watcher -- adding directory
 	Inotify notify;
-	InotifyWatch watch(dir, IN_ALL_EVENTS);
+	InotifyWatch watch(folder, IN_ALL_EVENTS);
 	notify.SetNonBlock(false);
 	notify.Add(watch);
 	
