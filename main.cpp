@@ -69,11 +69,15 @@ int main(int argc, char** argv){
 				//cout << event_name << " : " << mask << endl;
 				switch(mask){
 					case IN_ACCESS:
+						{
 						//File was accessed
 						cout << "acced " << event_name<< endl;
-						exec(const_cast<char*>(("mv /tmp/"+event_name+" "+copy_folder).c_str()));
 						cache[0] = event_name;
+						//caching the actual file
+						cout << ("ls -l /proc/"+to_string(pid)+"/fd") << endl;
+				
 						break;
+						}
 					case IN_ATTRIB:
 						//Metadata changed—for example, permissions,
                              			//timestamps, extended attributes, link count
