@@ -92,7 +92,7 @@ int main(int argc, char** argv){
 						if (!cache.empty() && cache.back()!=event_name){
 							//rename old file
 							const fs::path oldname(copy_folder+"/"+cache.back());
-							const fs::path newname("video "+to_string(file_index));
+							const fs::path newname(copy_folder+"/video"+to_string(file_index)+".avi");
 							try{
 								cout << "renaming..." <<endl;
 								fs::rename(oldname, newname);
