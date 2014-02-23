@@ -11,6 +11,7 @@
 #include <sstream>
 #include<unistd.h>
 #include<vector>
+#define BOOST_NO_SCOPED_ENUMS
 #include<boost/filesystem.hpp>
 std::string exec(char* cmd);
 void cachefile(std::string& process_folder, std::string& filename, int pid, std::string cachefolder);
