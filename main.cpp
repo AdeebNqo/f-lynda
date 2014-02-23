@@ -12,7 +12,7 @@
 #include<unistd.h>
 #include<vector>
 std::string exec(char* cmd);
-void cachefile(std::string& process_folder);
+void cachefile(std::string& process_folder, std::string& filename, int pid, std::string cachefolder);
 int main(int argc, char** argv){
 	using namespace std;
 
@@ -29,6 +29,11 @@ int main(int argc, char** argv){
 		copy_folder = optarg;
 		cout << copy_folder << endl;
 	}
+	//creating copy folder in case it does exist
+	string create = "mkdir "+copy_folder;
+	cout << "creating copy folder" << endl;
+	exec(const_cast<char*>(create.c_str()));
+	cout << "done creating copy folder" << endl;
 	/*
 	
 	watching a directory
@@ -77,7 +82,7 @@ int main(int argc, char** argv){
 						cache.push_back(event_name);
 						//caching the actual file
 						string result = exec(const_cast<char*>(("ls -l /proc/"+to_string(pid)+"/fd").c_str()));
-						cachefile(result);
+						cachefile(result,event_name, pid, copy_folder);
 				
 						break;
 						}
@@ -163,10 +168,25 @@ std::string exec(char* cmd) {
 
 	Method for caching the actual deleted file
 */
-void cachefile(std::string& process_folder){
+void cachefile(std::string& process_folder, std::string& filename, int pid, std::string cachefolder){
+
+	//deleting current cached file
+	exec(const_cast<char*>(("rm "+cachefolder+"/"+filename).c_str()));
+
+	std::string proc_folder = "/proc/"+std::to_string(pid)+"/fd";
 	std::stringstream stream(process_folder);
 	std::string line;
 	while(std::getline(stream, line, '\n')){
-		std::cout << line << std::endl;
+		if (line.find(filename)!=std::string::npos){
+			std::cout <<"line: " << line << std::endl;
+			std::stringstream tokens(line);
+			std::string filenum;
+			for (int i=0; i<9; ++i){
+				tokens >> filenum;			
+			}
+			std::cout << "moving..." << std::endl;
+			exec(const_cast<char*>(("sudo cp "+proc_folder+"/"+filenum+" "+cachefolder).c_str()));
+			std::cout << "done moving..." << std::endl;
+		}
 	}
 }
