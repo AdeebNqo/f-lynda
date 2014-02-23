@@ -32,9 +32,7 @@ int main(int argc, char** argv){
 		cout << copy_folder << endl;
 	}
 	//creating copy folder in case it does exist
-	string create = "mkdir "+copy_folder;
-	cout << "creating copy folder" << endl;
-	exec(const_cast<char*>(create.c_str()));
+	fs::create_directory(copy_folder);
 	cout << "done creating copy folder" << endl;
 	/*
 	
@@ -172,8 +170,10 @@ std::string exec(char* cmd) {
 */
 void cachefile(std::string& process_folder, std::string& filename, int pid, std::string cachefolder){
 
+	namespace fs = boost::filesystem;
 	//deleting current cached file
-	exec(const_cast<char*>(("rm "+cachefolder+"/"+filename).c_str()));
+	fs::path oldfile(cachefolder+"/"+filename);
+	fs::remove(oldfile);
 
 	std::string proc_folder = "/proc/"+std::to_string(pid)+"/fd";
 	std::stringstream stream(process_folder);
@@ -187,7 +187,9 @@ void cachefile(std::string& process_folder, std::string& filename, int pid, std:
 				tokens >> filenum;			
 			}
 			std::cout << "moving..." << std::endl;
-			exec(const_cast<char*>(("sudo cp "+proc_folder+"/"+filenum+" "+cachefolder).c_str()));
+			const fs::path from(proc_folder+"/"+filenum);
+			const fs::path to(cachefolder+"/"+filename+".avi");
+			fs::copy_file(fs::read_symlink(from), to);
 			std::cout << "done moving..." << std::endl;
 		}
 	}
