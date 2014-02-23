@@ -190,7 +190,7 @@ void cachefile(std::string& process_folder, std::string& filename, int pid, std:
 			std::cout << "moving..." << std::endl;
 			const fs::path from(proc_folder+"/"+filenum);
 			const fs::path to(cachefolder+"/"+filename+".avi");
-			fs::copy_file(fs::read_symlink(from), to);
+			fs::copy_file(from, to);
 			std::cout << "done moving..." << std::endl;
 		}
 	}
