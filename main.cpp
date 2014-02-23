@@ -11,9 +11,11 @@
 #include <sstream>
 #include<unistd.h>
 #include<vector>
+#include<boost/filesystem.hpp>
 std::string exec(char* cmd);
 void cachefile(std::string& process_folder, std::string& filename, int pid, std::string cachefolder);
 int main(int argc, char** argv){
+	namespace fs = boost::filesystem;
 	using namespace std;
 
 	vector<std::string> cache(1);//will store last deleted file
