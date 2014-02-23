@@ -10,6 +10,7 @@
 #include<thread>
 #include <sstream>
 #include<unistd.h>
+#include<exception>
 #include<vector>
 #define BOOST_NO_SCOPED_ENUMS //helped by http://www.robertnitsch.de/notes/cpp/cpp11_boost_filesystem_undefined_reference_copy_file
 #include<boost/filesystem.hpp>
@@ -33,8 +34,14 @@ int main(int argc, char** argv){
 		cout << copy_folder << endl;
 	}
 	//creating copy folder in case it does exist
-	fs::create_directory(copy_folder);
-	cout << "done creating copy folder" << endl;
+	try{
+		cout << "creating folder..." << endl;
+		fs::create_directory(copy_folder);
+		cout << "folder creation successfull" << endl;
+	}catch(exception e){
+		e.what();
+		cout << "folder creation failed" << endl;
+	}
 	/*
 	
 	watching a directory
@@ -53,7 +60,8 @@ int main(int argc, char** argv){
 	ss >> null_stream;
 	ss >> pid;
 	cout << result << endl;
-	cout << pid << "\n\nNow watching tmp folder..."<< endl;
+	
+	cout << "watching folder..." << endl;
 	
 	//creating the watcher -- adding directory
 	Inotify notify;
@@ -85,7 +93,14 @@ int main(int argc, char** argv){
 							//rename old file
 							const fs::path oldname(copy_folder+"/"+cache.back());
 							const fs::path newname("video "+to_string(file_index));
-							fs::rename(oldname, newname);
+							try{
+								cout << "renaming..." <<endl;
+								fs::rename(oldname, newname);
+								cout << "rename successfull" <<endl;
+							}catch(exception e){
+								cout << e.what() << endl;
+								cout << "rename failed" <<endl;
+							}
 						}
 						cache.clear();					
 						cache.push_back(event_name);
@@ -189,17 +204,21 @@ void cachefile(std::string& process_folder, std::string& filename, int pid, std:
 	std::string line;
 	while(std::getline(stream, line, '\n')){
 		if (line.find(filename)!=std::string::npos){
-			std::cout <<"line: " << line << std::endl;
 			std::stringstream tokens(line);
 			std::string filenum;
 			for (int i=0; i<9; ++i){
 				tokens >> filenum;			
 			}
-			std::cout << "moving..." << std::endl;
+			std::cout << "Moving..." << std::endl;
 			const fs::path from(proc_folder+"/"+filenum);
 			const fs::path to(cachefolder+"/"+filename+".avi");
-			fs::copy_file(from, to);
-			std::cout << "done moving..." << std::endl;
+			std::cout << "Move successfull." << std::endl;
+			try{
+				fs::copy_file(from, to);
+			}catch(std::exception e){
+				std::cout << e.what() << std::endl;
+				std::cout << "Move failed." << std::endl;
+			}
 		}
 	}
 }
