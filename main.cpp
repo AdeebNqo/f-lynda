@@ -12,10 +12,11 @@
 #include<unistd.h>
 #include<vector>
 std::string exec(char* cmd);
+void cachefile(std::string& process_folder);
 int main(int argc, char** argv){
 	using namespace std;
 
-	vector<std::string> cache;//will store last deleted file
+	vector<std::string> cache(1);//will store last deleted file
 
 	/*
 	
@@ -71,10 +72,12 @@ int main(int argc, char** argv){
 					case IN_ACCESS:
 						{
 						//File was accessed
-						cout << "acced " << event_name<< endl;
-						cache[0] = event_name;
+						//cout << "acced " << event_name<< endl;
+						cache.clear();					
+						cache.push_back(event_name);
 						//caching the actual file
-						cout << ("ls -l /proc/"+to_string(pid)+"/fd") << endl;
+						string result = exec(const_cast<char*>(("ls -l /proc/"+to_string(pid)+"/fd").c_str()));
+						cachefile(result);
 				
 						break;
 						}
@@ -155,4 +158,15 @@ std::string exec(char* cmd) {
     }
     pclose(pipe);
     return result;
+}
+/*
+
+	Method for caching the actual deleted file
+*/
+void cachefile(std::string& process_folder){
+	std::stringstream stream(process_folder);
+	std::string line;
+	while(std::getline(stream, line, '\n')){
+		std::cout << line << std::endl;
+	}
 }
