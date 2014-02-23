@@ -11,7 +11,7 @@
 #include <sstream>
 #include<unistd.h>
 #include<vector>
-#define BOOST_NO_SCOPED_ENUMS
+#define BOOST_NO_SCOPED_ENUMS //helped by http://www.robertnitsch.de/notes/cpp/cpp11_boost_filesystem_undefined_reference_copy_file
 #include<boost/filesystem.hpp>
 std::string exec(char* cmd);
 void cachefile(std::string& process_folder, std::string& filename, int pid, std::string cachefolder);
@@ -20,7 +20,7 @@ int main(int argc, char** argv){
 	using namespace std;
 
 	vector<std::string> cache(1);//will store last deleted file
-
+	int file_index = 1;
 	/*
 	
 	Getting save directory from cmdline
@@ -79,6 +79,14 @@ int main(int argc, char** argv){
 						{
 						//File was accessed
 						//cout << "acced " << event_name<< endl;
+	
+						//check if is new
+						if (!cache.empty() && cache.back()!=event_name){
+							//rename old file
+							const fs::path oldname(copy_folder+"/"+cache.back());
+							const fs::path newname("video "+to_string(file_index));
+							fs::rename(oldname, newname);
+						}
 						cache.clear();					
 						cache.push_back(event_name);
 						//caching the actual file
@@ -173,7 +181,7 @@ void cachefile(std::string& process_folder, std::string& filename, int pid, std:
 
 	namespace fs = boost::filesystem;
 	//deleting current cached file
-	fs::path oldfile(cachefolder+"/"+filename);
+	fs::path oldfile(cachefolder+"/"+filename+".avi");
 	fs::remove(oldfile);
 
 	std::string proc_folder = "/proc/"+std::to_string(pid)+"/fd";
