@@ -196,8 +196,9 @@ void cachefile(std::string& process_folder, std::string& filename, int pid, std:
 
 	namespace fs = boost::filesystem;
 	//deleting current cached file
-	fs::path oldfile(cachefolder+"/"+filename+".avi");
-	fs::remove(oldfile);
+	//fs::path oldfile(cachefolder+"/"+filename+".avi");
+	//fs::rename(oldfile, fs::path("/tmp/"+filename+".avi"));
+	//fs::remove(oldfile);
 
 	std::string proc_folder = "/proc/"+std::to_string(pid)+"/fd";
 	std::stringstream stream(process_folder);
@@ -214,7 +215,7 @@ void cachefile(std::string& process_folder, std::string& filename, int pid, std:
 			const fs::path to(cachefolder+"/"+filename+".avi");
 			std::cout << "Move successfull." << std::endl;
 			try{
-				fs::copy_file(from, to);
+				fs::copy_file(from, to,  fs::copy_option::overwrite_if_exists);
 			}catch(std::exception e){
 				std::cout << e.what() << std::endl;
 				std::cout << "Move failed." << std::endl;
