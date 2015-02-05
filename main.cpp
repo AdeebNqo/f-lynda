@@ -62,7 +62,6 @@ int main(int argc, char** argv){
 
 	ss >> null_stream;
 	ss >> pid;
-	cout << result << endl;
 
 	cout << "watching folder..." << endl;
 
@@ -109,7 +108,7 @@ int main(int argc, char** argv){
 						cache.push_back(event_name);
 						//caching the actual file
 						string result = exec(const_cast<char*>(("ls -l /proc/"+to_string(pid)+"/fd").c_str()));
-						std::cout << result << " " << event_name << std::endl;
+						std::cout << result << " :--XXXX--: " << event_name << std::endl;
 						cachefile(result,event_name, pid, copy_folder);
 
 						break;
