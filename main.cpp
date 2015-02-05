@@ -12,8 +12,11 @@
 #include<unistd.h>
 #include<exception>
 #include<vector>
-#define BOOST_NO_SCOPED_ENUMS //helped by http://www.robertnitsch.de/notes/cpp/cpp11_boost_filesystem_undefined_reference_copy_file
+//#define BOOST_NO_SCOPED_ENUMS //helped by http://www.robertnitsch.de/notes/cpp/cpp11_boost_filesystem_undefined_reference_copy_file
+#define BOOST_NO_CXX11_SCOPED_ENUMS
 #include<boost/filesystem.hpp>
+#undef BOOST_NO_CXX11_SCOPED_ENUMS
+
 std::string exec(char* cmd);
 void cachefile(std::string& process_folder, std::string& filename, int pid, std::string cachefolder);
 int main(int argc, char** argv){
@@ -23,7 +26,7 @@ int main(int argc, char** argv){
 	vector<std::string> cache(1);//will store last deleted file
 	int file_index = 1;
 	/*
-	
+
 	Getting save directory from cmdline
 
 	*/
@@ -43,9 +46,9 @@ int main(int argc, char** argv){
 		cout << "folder creation failed" << endl;
 	}
 	/*
-	
+
 	watching a directory
-	
+
 	*/
 	string folder = "/tmp";
 	string folder2 = "/proc/33/fd";
@@ -55,20 +58,20 @@ int main(int argc, char** argv){
 	string result = exec(cmd);
 	stringstream ss(result);
 	string null_stream;
-	int pid;	
-	
+	int pid;
+
 	ss >> null_stream;
 	ss >> pid;
 	cout << result << endl;
-	
+
 	cout << "watching folder..." << endl;
-	
+
 	//creating the watcher -- adding directory
 	Inotify notify;
 	InotifyWatch watch(folder, IN_ALL_EVENTS);
 	notify.SetNonBlock(false);
 	notify.Add(watch);
-	
+
 	//wating for a response
 	while(true){
 		notify.WaitForEvents();
@@ -87,7 +90,7 @@ int main(int argc, char** argv){
 						{
 						//File was accessed
 						//cout << "acced " << event_name<< endl;
-	
+
 						//check if is new
 						if (!cache.empty() && cache.back()!=event_name){
 							//rename old file
@@ -102,12 +105,13 @@ int main(int argc, char** argv){
 								cout << "rename failed" <<endl;
 							}
 						}
-						cache.clear();					
+						cache.clear();
 						cache.push_back(event_name);
 						//caching the actual file
 						string result = exec(const_cast<char*>(("ls -l /proc/"+to_string(pid)+"/fd").c_str()));
+						std::cout << result << " " << event_name << std::endl;
 						cachefile(result,event_name, pid, copy_folder);
-				
+
 						break;
 						}
 					case IN_ATTRIB:
@@ -165,7 +169,7 @@ int main(int argc, char** argv){
 			}
 		}
 	}
-	
+
 	return 0;
 }
 /*
@@ -208,7 +212,7 @@ void cachefile(std::string& process_folder, std::string& filename, int pid, std:
 			std::stringstream tokens(line);
 			std::string filenum;
 			for (int i=0; i<9; ++i){
-				tokens >> filenum;			
+				tokens >> filenum;
 			}
 			std::cout << "Moving..." << std::endl;
 			const fs::path from(proc_folder+"/"+filenum);
