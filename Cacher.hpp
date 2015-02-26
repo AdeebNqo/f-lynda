@@ -18,7 +18,11 @@ public:
   std::string cacheFolder;
 private:
   std::string exec(char* cmd);
-  int getFirefoxPID();
+  std::string getFirefoxPID();
   std::string getFirefoxMediaFileNewName(std::string oldname);
+  void reallyCacheFile(std::string oldname, std::string newname);
+  std::string getRandomString(int len); //Credit: thewall7, http://stackoverflow.com/a/11093644/1984350
+  bool isOkForCaching(std::string name);
+  void clean(std::string &value);
 };
 #endif

@@ -10,14 +10,14 @@
 
 int main(int argc, char** argv){
 	Cacher cacher;
-	std::string cwd(".");
+	std::string cwd("/tmp");
 	std::string watchFolder("/tmp/");
 	cacher.setCacheFolder(cwd);
 	cacher.setWatchFolder(watchFolder);
 	try{
 		cacher.cacheAndWAit();
 	}catch(std::exception &e){
-		e.what();
+		std::cout << e.what() << std::endl;
 	}
 	return 0;
 }
