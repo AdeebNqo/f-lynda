@@ -16,5 +16,9 @@ public:
   void cacheAndWAit();
   std::string watchFolder;
   std::string cacheFolder;
+private:
+  std::string exec(char* cmd);
+  int getFirefoxPID();
+  std::string getFirefoxMediaFileNewName(std::string oldname);
 };
 #endif
