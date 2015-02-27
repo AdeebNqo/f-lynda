@@ -10,4 +10,6 @@ $(obj): inotify-cxx.h Cacher.o
 Cacher.o : Cacher.cpp
 	$(com) -c Cacher.cpp
 clean:
-	rm -f *.o $(app_name)
+	rm -f *.o $(app_name) test
+test: Cacher.o inotify-cxx.o
+	g++ tests/main.cpp Cacher.o inotify-cxx.o -o test $(opt) -I tests/gtest/include && ./test
