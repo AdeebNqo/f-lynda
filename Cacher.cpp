@@ -127,8 +127,9 @@ std::string Cacher::exec(char* cmd){
 }
 
 string Cacher::getFirefoxPID(){
-  string cmd("ps -A | grep firefox | cut -d' ' -f 1");
-  return exec(const_cast<char*>(cmd.c_str()));
+  string cmd("ps -A | grep firefox | awk '{$2=$2}1' | cut -d ' ' -f 1");
+  string result = exec(const_cast<char*>(cmd.c_str()));
+  return result;
 }
 
 string Cacher::getFirefoxMediaFileNewName(std::string oldname){
