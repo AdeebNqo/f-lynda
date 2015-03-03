@@ -16,10 +16,11 @@ void clean(std::string &value);
 */
 
 TEST(EXEC, ECHO){
-  EXPECT_EQ(std::string("hello"), Cacher::exec("echo hello"))
+  Cacher cacher;
+  EXPECT_EQ(std::string("hello"), cacher.exec(const_cast<char *>("echo hello")));
 }
 
-int main(){
-  RUN_ALL_TESTS()
-  return 0
+int main(int argc, char **argv){
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }
