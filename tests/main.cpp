@@ -17,7 +17,9 @@ void clean(std::string &value);
 
 TEST(EXEC, ECHO){
   Cacher cacher;
-  EXPECT_EQ(std::string("hello"), cacher.exec(const_cast<char *>("echo hello")));
+  char  cmd[] = "echo hello";
+  std::string result("hello");
+  EXPECT_EQ(result, cacher.exec(cmd));
 }
 
 int main(int argc, char **argv){
