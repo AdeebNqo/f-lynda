@@ -18,7 +18,7 @@ void clean(std::string &value);
 TEST(EXEC, ECHO){
   Cacher cacher;
   char  cmd[] = "echo hello";
-  std::string result("hello");
+  std::string result("hello\n");
   EXPECT_EQ(result, cacher.exec(cmd));
 }
 
