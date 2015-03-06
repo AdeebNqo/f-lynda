@@ -14,10 +14,10 @@ Cacher.o : Cacher.cpp
 clean:
 	@rm -f *.o $(app_name) test
 test: Cacher.o inotify-cxx.o
-	#wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
+	wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
 	mkdir gtest-1.7.0
 	unzip gtest-1.7.0.zip -d gtest-1.7.0
-	#rm -f gtest-1.7.0.zip
+	rm -f gtest-1.7.0.zip
 	mkdir -p tests/gtest
 	cp -Rf gtest-1.7.0/* tests/gtest
 	rm -rf gtest-1.7.0
