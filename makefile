@@ -1,5 +1,5 @@
 app_name = flynda
-opt = -std=c++11 -L/usr/include/ -lboost_filesystem -lboost_system
+opt = -L/usr/include/ -lboost_filesystem -lboost_system
 com = g++
 obj = inotify-cxx.o
 $(app_name): main.cpp inotify-cxx.o
