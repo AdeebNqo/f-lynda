@@ -3,6 +3,8 @@
 #include "Cacher.hpp"
 #include<exception>
 #include <sstream>
+#include <iostream>
+#include <fstream>
 using namespace std;
 namespace fs = boost::filesystem;
 Cacher::Cacher(){
@@ -138,9 +140,9 @@ string Cacher::getFirefoxMediaFileNewName(std::string oldname){
 }
 
 void Cacher::reallyCacheFile(std::string oldname, std::string newname){
+  string newpath = cacheFolder+"/flynda/"+newname;
   try{
     string oldpath = "/proc/"+getFirefoxPID()+"/fd/"+getFirefoxMediaFileNewName(oldname);
-    string newpath = cacheFolder+"/flynda/"+newname;
     clean(oldpath);
     clean(newpath);
     fs::path resolved(oldpath);
@@ -152,7 +154,14 @@ void Cacher::reallyCacheFile(std::string oldname, std::string newname){
     }
     //fs::copy_file(resolved,newfilepath,fs::copy_option::overwrite_if_exists);
   }catch(exception &e){
-    cout << e.what() << endl;
+    string reason = e.what();
+    cout << reason << endl;
+
+    std::string prefix("boost::filesystem::file_size: No such file or directory:");
+    if (!reason.compare(0, prefix.size(), prefix)){
+      std::ofstream outfile (newpath.c_str());
+      outfile.close();
+    }
   }
 }
 
