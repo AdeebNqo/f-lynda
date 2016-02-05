@@ -83,7 +83,7 @@ void Cacher::cacheAndWAit(){
             //Watched file/directory was itself deleted.
             break;
           case IN_MODIFY:
-            cout << "modified " << filename<< endl;
+            //cout << "modified " << filename<< endl;
             //File was modified
             break;
           case IN_MOVE_SELF:
